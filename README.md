@@ -1,68 +1,55 @@
 <div align="center">
 
-![header](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12&height=200&section=header&text=Wersti&fontSize=80&fontAlignY=35&desc=Mathematician%20·%20Engineer%20·%20Builder&descAlignY=55&descAlign=50&fontColor=fff)
-
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=600&lines=Mathematician+%26+Telecom+Engineer;Passionate+about+AI+%26+Machine+Learning;I+build+and+optimize+systems;Always+learning%2C+always+building)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=24&pause=1000&color=58A6FF&center=true&vCenter=true&width=700&lines=Mathematician+%26+Engineer;Security+%7C+AI+%7C+Systems;Building+at+the+intersection+of+math+%26+code)](https://git.io/typing-svg)
 
 </div>
 
 ---
 
-```bash
-$ whoami
-  Wersti
+```
+Mathematician · Telematics Engineer · MSc Advanced Mathematics
 
-$ cat about.txt
-  Mathematician and Telecommunications Engineer.
-  I like programming, optimizing things, and building systems.
-  Currently deep into AI & Machine Learning.
+Security Engineer @ Adevinta
+Research: Massive MIMO optimization · Neural dynamical systems
 
-$ ls skills/
-  mathematics/     telecommunications/    ai-ml/
-  optimization/    systems-design/        web/
-
-$ cat currently_building.txt
-  → wersti.github.io  (personal portfolio)
-
-$ echo $STATUS
-  Always learning.
+Interests: AI/ML · Stochastic processes · Scalable systems · Cryptography
 ```
 
 ---
 
-<div align="center">
+**Languages**
 
-### 🛠 Tech Stack
+![Python](https://img.shields.io/badge/Python-0d1117?style=flat-square&logo=python&logoColor=3776AB)
+![Go](https://img.shields.io/badge/Go-0d1117?style=flat-square&logo=go&logoColor=00ADD8)
+![Rust](https://img.shields.io/badge/Rust-0d1117?style=flat-square&logo=rust&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-0d1117?style=flat-square&logo=typescript&logoColor=3178C6)
+![C++](https://img.shields.io/badge/C++-0d1117?style=flat-square&logo=cplusplus&logoColor=00599C)
+![R](https://img.shields.io/badge/R-0d1117?style=flat-square&logo=r&logoColor=276DC3)
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Astro](https://img.shields.io/badge/Astro-FF5D01?style=for-the-badge&logo=astro&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+**AI / ML**
 
-### 🤖 AI / ML
+![JAX](https://img.shields.io/badge/JAX-0d1117?style=flat-square&logo=google&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-0d1117?style=flat-square&logo=pytorch&logoColor=EE4C2C)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-0d1117?style=flat-square&logo=tensorflow&logoColor=FF6F00)
+![NumPy](https://img.shields.io/badge/NumPy-0d1117?style=flat-square&logo=numpy&logoColor=013243)
+![Polars](https://img.shields.io/badge/Polars-0d1117?style=flat-square&logo=polars&logoColor=CD792C)
+![CUDA](https://img.shields.io/badge/CUDA-0d1117?style=flat-square&logo=nvidia&logoColor=76B900)
 
-![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
+**Cloud & Systems**
 
-</div>
+![AWS](https://img.shields.io/badge/AWS-0d1117?style=flat-square&logo=amazonaws&logoColor=FF9900)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-0d1117?style=flat-square&logo=kubernetes&logoColor=326CE5)
+![Terraform](https://img.shields.io/badge/Terraform-0d1117?style=flat-square&logo=terraform&logoColor=7B42BC)
+![Docker](https://img.shields.io/badge/Docker-0d1117?style=flat-square&logo=docker&logoColor=2496ED)
+![Linux](https://img.shields.io/badge/Linux-0d1117?style=flat-square&logo=linux&logoColor=FCC624)
+![Elastic](https://img.shields.io/badge/Elastic_Stack-0d1117?style=flat-square&logo=elastic&logoColor=005571)
 
 ---
 
 <div align="center">
 
-### 🔗 Find me
-
-[![Portfolio](https://img.shields.io/badge/Portfolio-wersti.github.io-FF5D01?style=for-the-badge&logo=astro&logoColor=white)](https://wersti.github.io)
-[![GitHub](https://img.shields.io/badge/GitHub-Wersti-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Wersti)
-
-</div>
-
-<div align="center">
-
-![footer](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12&height=120&section=footer)
+[![Portfolio](https://img.shields.io/badge/Portfolio-0d1117?style=flat-square&logo=astro&logoColor=FF5D01)](https://wersti.github.io)
+&nbsp;
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0d1117?style=flat-square&logo=linkedin&logoColor=0A66C2)](https://linkedin.com/in/jacobo-guerrero)
 
 </div>
