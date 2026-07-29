@@ -1,0 +1,279 @@
+<svg width="900" height="300" viewBox="0 0 900 300"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <defs>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <radialGradient id="centerGlow" cx="50%" cy="52%" r="50%">
+      <stop offset="0%"   stop-color="#1f6feb" stop-opacity="0.16"/>
+      <stop offset="60%"  stop-color="#1f6feb" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#0d1117" stop-opacity="0"/>
+    </radialGradient>
+
+    <style>
+      .edge   { fill: none; stroke: #58a6ff; stroke-width: 0.8;
+                stroke-dasharray: 400; stroke-dashoffset: 400; }
+      .halo   { fill: #58a6ff; opacity: 0.09; }
+      .core   { fill: #58a6ff; }
+      .core-v { fill: #a371f7; }
+      .pulse  { fill: #a5d6ff; }
+      .walk   { fill: #6e7681; }
+      .wiener { fill: none; stroke: #21384f; stroke-width: 1.2;
+                stroke-linejoin: round; stroke-linecap: round;
+                stroke-dasharray: 1500; stroke-dashoffset: 1500; }
+      .name   { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-size: 44px; font-weight: 700; letter-spacing: 14px;
+                fill: #e6edf3; }
+      .sub    { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-size: 11px; font-weight: 400; letter-spacing: 6px;
+                fill: #7d8590; }
+      .eq     { font-family: Georgia, 'Times New Roman', serif;
+                font-size: 13px; font-style: italic; fill: #2d3d4f; }
+    </style>
+  </defs>
+
+  <!-- ── background ───────────────────────────────────────────────── -->
+  <rect width="900" height="300" fill="#0d1117"/>
+  <rect width="900" height="300" fill="url(#centerGlow)"/>
+
+  <!-- ── Wiener process path (draws itself, bottom) ────────────────── -->
+  <path class="wiener" d="M50,268 L72,255 L88,274 L104,249 L122,262 L138,240
+    L156,253 L172,235 L190,249 L206,270 L224,256 L242,276 L258,259 L276,272
+    L294,253 L312,265 L330,243 L348,257 L366,238 L384,252 L402,268 L420,255
+    L438,274 L456,260 L474,277 L492,263 L510,245 L528,258 L546,240 L564,253
+    L582,269 L600,256 L618,272 L636,253 L654,265 L672,246 L690,259 L708,241
+    L726,254 L744,269 L762,255 L780,267 L798,248 L816,261 L834,244 L852,257">
+    <animate attributeName="stroke-dashoffset" dur="16s" repeatCount="indefinite"
+             values="1500;0;0;1500" keyTimes="0;0.45;0.9;1"/>
+  </path>
+
+  <!-- signature: the SDE that generates that path -->
+  <text class="eq" x="50" y="240" opacity="0">
+    <animate attributeName="opacity" dur="2s" begin="2.2s" fill="freeze" values="0;1"/>
+    dX<tspan dy="4" font-size="9">t</tspan><tspan dy="-4"> = μ dt + σ dW</tspan><tspan dy="4" font-size="9">t</tspan>
+  </text>
+
+  <!-- ── network edges (self-drawing, then breathing) ──────────────── -->
+  <g>
+    <path id="e1"  class="edge" d="M60,58 L150,118"/>
+    <path id="e2"  class="edge" d="M150,118 L88,190"/>
+    <path id="e3"  class="edge" d="M60,58 L222,62"/>
+    <path id="e4"  class="edge" d="M150,118 L222,62"/>
+    <path id="e5"  class="edge" d="M88,190 L255,205"/>
+    <path id="e6"  class="edge" d="M222,62 L398,46"/>
+    <path id="e7"  class="edge" d="M398,46 L556,42"/>
+    <path id="e8"  class="edge" d="M255,205 L452,212"/>
+    <path id="e9"  class="edge" d="M556,42 L688,68"/>
+    <path id="e10" class="edge" d="M688,68 L838,62"/>
+    <path id="e11" class="edge" d="M688,68 L762,150"/>
+    <path id="e12" class="edge" d="M762,150 L842,198"/>
+    <path id="e13" class="edge" d="M452,212 L648,205"/>
+    <path id="e14" class="edge" d="M648,205 L762,150"/>
+    <path id="e15" class="edge" d="M838,62 L762,150"/>
+    <path id="e16" class="edge" d="M398,46 L150,118"/>
+
+    <!-- draw-in, staggered -->
+    <animate xlink:href="#e1"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.0s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e2"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.1s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e3"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.2s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e4"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.3s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e5"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.4s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e6"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.5s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e7"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.6s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e8"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.7s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e9"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.8s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e10" attributeName="stroke-dashoffset" dur="1.4s" begin="0.9s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e11" attributeName="stroke-dashoffset" dur="1.4s" begin="1.0s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e12" attributeName="stroke-dashoffset" dur="1.4s" begin="1.1s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e13" attributeName="stroke-dashoffset" dur="1.4s" begin="1.2s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e14" attributeName="stroke-dashoffset" dur="1.4s" begin="1.3s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e15" attributeName="stroke-dashoffset" dur="1.4s" begin="1.4s" fill="freeze" values="400;0"/>
+    <animate xlink:href="#e16" attributeName="stroke-dashoffset" dur="1.4s" begin="1.5s" fill="freeze" values="400;0"/>
+
+    <!-- independent opacity breathing, irregular periods -->
+    <animate xlink:href="#e1"  attributeName="opacity" dur="9s"  begin="1.6s" repeatCount="indefinite" values="0.30;0.55;0.18;0.42;0.30"/>
+    <animate xlink:href="#e2"  attributeName="opacity" dur="11s" begin="1.7s" repeatCount="indefinite" values="0.24;0.14;0.48;0.22;0.24"/>
+    <animate xlink:href="#e3"  attributeName="opacity" dur="13s" begin="1.8s" repeatCount="indefinite" values="0.28;0.50;0.20;0.38;0.28"/>
+    <animate xlink:href="#e4"  attributeName="opacity" dur="8s"  begin="1.9s" repeatCount="indefinite" values="0.20;0.44;0.16;0.52;0.20"/>
+    <animate xlink:href="#e5"  attributeName="opacity" dur="12s" begin="2.0s" repeatCount="indefinite" values="0.32;0.18;0.46;0.26;0.32"/>
+    <animate xlink:href="#e6"  attributeName="opacity" dur="10s" begin="2.1s" repeatCount="indefinite" values="0.26;0.52;0.22;0.40;0.26"/>
+    <animate xlink:href="#e7"  attributeName="opacity" dur="14s" begin="2.2s" repeatCount="indefinite" values="0.30;0.16;0.50;0.24;0.30"/>
+    <animate xlink:href="#e8"  attributeName="opacity" dur="9.5s" begin="2.3s" repeatCount="indefinite" values="0.22;0.46;0.18;0.36;0.22"/>
+    <animate xlink:href="#e9"  attributeName="opacity" dur="11.5s" begin="2.4s" repeatCount="indefinite" values="0.28;0.20;0.54;0.24;0.28"/>
+    <animate xlink:href="#e10" attributeName="opacity" dur="13.5s" begin="2.5s" repeatCount="indefinite" values="0.24;0.48;0.16;0.40;0.24"/>
+    <animate xlink:href="#e11" attributeName="opacity" dur="8.5s" begin="2.6s" repeatCount="indefinite" values="0.30;0.18;0.44;0.28;0.30"/>
+    <animate xlink:href="#e12" attributeName="opacity" dur="12.5s" begin="2.7s" repeatCount="indefinite" values="0.20;0.42;0.24;0.50;0.20"/>
+    <animate xlink:href="#e13" attributeName="opacity" dur="10.5s" begin="2.8s" repeatCount="indefinite" values="0.26;0.16;0.46;0.30;0.26"/>
+    <animate xlink:href="#e14" attributeName="opacity" dur="14.5s" begin="2.9s" repeatCount="indefinite" values="0.22;0.50;0.20;0.34;0.22"/>
+    <animate xlink:href="#e15" attributeName="opacity" dur="9.8s" begin="3.0s" repeatCount="indefinite" values="0.28;0.20;0.44;0.26;0.28"/>
+    <animate xlink:href="#e16" attributeName="opacity" dur="11.8s" begin="3.1s" repeatCount="indefinite" values="0.18;0.40;0.22;0.46;0.18"/>
+  </g>
+
+  <!-- ── activation pulses travelling along the edges ──────────────── -->
+  <g filter="url(#glow)">
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="3.2s" begin="1.8s" repeatCount="indefinite"><mpath xlink:href="#e3"/></animateMotion>
+      <animate attributeName="opacity" dur="3.2s" begin="1.8s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="3.8s" begin="2.4s" repeatCount="indefinite"><mpath xlink:href="#e6"/></animateMotion>
+      <animate attributeName="opacity" dur="3.8s" begin="2.4s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="3.4s" begin="3.1s" repeatCount="indefinite"><mpath xlink:href="#e7"/></animateMotion>
+      <animate attributeName="opacity" dur="3.4s" begin="3.1s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="4.2s" begin="2.0s" repeatCount="indefinite"><mpath xlink:href="#e9"/></animateMotion>
+      <animate attributeName="opacity" dur="4.2s" begin="2.0s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="3.6s" begin="3.6s" repeatCount="indefinite"><mpath xlink:href="#e11"/></animateMotion>
+      <animate attributeName="opacity" dur="3.6s" begin="3.6s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="4.6s" begin="2.7s" repeatCount="indefinite"><mpath xlink:href="#e13"/></animateMotion>
+      <animate attributeName="opacity" dur="4.6s" begin="2.7s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="4.0s" begin="4.2s" repeatCount="indefinite"><mpath xlink:href="#e5"/></animateMotion>
+      <animate attributeName="opacity" dur="4.0s" begin="4.2s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="5.0s" begin="3.3s" repeatCount="indefinite"><mpath xlink:href="#e16"/></animateMotion>
+      <animate attributeName="opacity" dur="5.0s" begin="3.3s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+    <circle class="pulse" r="2.2" opacity="0">
+      <animateMotion dur="3.5s" begin="4.8s" repeatCount="indefinite"><mpath xlink:href="#e10"/></animateMotion>
+      <animate attributeName="opacity" dur="3.5s" begin="4.8s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    </circle>
+  </g>
+
+  <!-- ── nodes (halo breathes, whole node drifts slightly) ─────────── -->
+  <g>
+    <g><animateTransform attributeName="transform" type="translate" dur="17s" repeatCount="indefinite" values="0,0; 2,-3; -2,2; 3,1; 0,0"/>
+      <circle class="halo" cx="60" cy="58" r="15"><animate attributeName="r" dur="4.3s" repeatCount="indefinite" values="13;21;13"/></circle>
+      <circle class="core" cx="60" cy="58" r="3.6" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="19s" repeatCount="indefinite" values="0,0; -3,2; 2,3; -1,-2; 0,0"/>
+      <circle class="halo" cx="150" cy="118" r="15"><animate attributeName="r" dur="5.1s" repeatCount="indefinite" values="13;22;13"/></circle>
+      <circle class="core" cx="150" cy="118" r="4" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="23s" repeatCount="indefinite" values="0,0; 3,3; -2,-2; 1,3; 0,0"/>
+      <circle class="halo" cx="88" cy="190" r="15"><animate attributeName="r" dur="3.7s" repeatCount="indefinite" values="12;20;12"/></circle>
+      <circle class="core-v" cx="88" cy="190" r="3.4" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="15s" repeatCount="indefinite" values="0,0; -2,-3; 3,-1; -3,2; 0,0"/>
+      <circle class="halo" cx="222" cy="62" r="15"><animate attributeName="r" dur="4.9s" repeatCount="indefinite" values="13;21;13"/></circle>
+      <circle class="core" cx="222" cy="62" r="3.6" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="21s" repeatCount="indefinite" values="0,0; 2,3; -3,-1; 2,-3; 0,0"/>
+      <circle class="halo" cx="255" cy="205" r="15"><animate attributeName="r" dur="4.1s" repeatCount="indefinite" values="12;20;12"/></circle>
+      <circle class="core" cx="255" cy="205" r="3.4" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="18s" repeatCount="indefinite" values="0,0; -3,1; 1,-3; 3,2; 0,0"/>
+      <circle class="halo" cx="398" cy="46" r="15"><animate attributeName="r" dur="5.5s" repeatCount="indefinite" values="14;23;14"/></circle>
+      <circle class="core" cx="398" cy="46" r="4.2" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="25s" repeatCount="indefinite" values="0,0; 3,-2; -1,3; -3,-1; 0,0"/>
+      <circle class="halo" cx="556" cy="42" r="15"><animate attributeName="r" dur="3.9s" repeatCount="indefinite" values="12;21;12"/></circle>
+      <circle class="core-v" cx="556" cy="42" r="3.6" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="16s" repeatCount="indefinite" values="0,0; -2,3; 3,1; -1,-3; 0,0"/>
+      <circle class="halo" cx="452" cy="212" r="15"><animate attributeName="r" dur="4.6s" repeatCount="indefinite" values="13;21;13"/></circle>
+      <circle class="core" cx="452" cy="212" r="3.6" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="22s" repeatCount="indefinite" values="0,0; 2,2; -3,-2; 1,3; 0,0"/>
+      <circle class="halo" cx="688" cy="68" r="15"><animate attributeName="r" dur="5.3s" repeatCount="indefinite" values="14;23;14"/></circle>
+      <circle class="core" cx="688" cy="68" r="4.2" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="20s" repeatCount="indefinite" values="0,0; -3,-2; 2,3; 3,-1; 0,0"/>
+      <circle class="halo" cx="762" cy="150" r="15"><animate attributeName="r" dur="4.4s" repeatCount="indefinite" values="13;22;13"/></circle>
+      <circle class="core" cx="762" cy="150" r="4" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="24s" repeatCount="indefinite" values="0,0; 3,2; -2,-3; -1,2; 0,0"/>
+      <circle class="halo" cx="838" cy="62" r="15"><animate attributeName="r" dur="3.8s" repeatCount="indefinite" values="12;20;12"/></circle>
+      <circle class="core" cx="838" cy="62" r="3.4" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="26s" repeatCount="indefinite" values="0,0; -2,2; 3,-3; -3,1; 0,0"/>
+      <circle class="halo" cx="648" cy="205" r="15"><animate attributeName="r" dur="5.0s" repeatCount="indefinite" values="13;21;13"/></circle>
+      <circle class="core-v" cx="648" cy="205" r="3.6" filter="url(#glow)"/></g>
+
+    <g><animateTransform attributeName="transform" type="translate" dur="14s" repeatCount="indefinite" values="0,0; 2,-2; -3,3; 1,2; 0,0"/>
+      <circle class="halo" cx="842" cy="198" r="15"><animate attributeName="r" dur="4.2s" repeatCount="indefinite" values="12;20;12"/></circle>
+      <circle class="core" cx="842" cy="198" r="3.4" filter="url(#glow)"/></g>
+  </g>
+
+  <!-- ── free particles: irregular random walk ─────────────────────── -->
+  <g opacity="0.5">
+    <circle class="walk" r="1.6">
+      <animate attributeName="cx" dur="31s" repeatCount="indefinite"
+        keyTimes="0;0.07;0.13;0.22;0.29;0.36;0.45;0.53;0.61;0.68;0.77;0.85;0.93;1"
+        values="120;138;131;152;168;159;181;174;196;188;171;149;133;120"/>
+      <animate attributeName="cy" dur="31s" repeatCount="indefinite"
+        keyTimes="0;0.07;0.13;0.22;0.29;0.36;0.45;0.53;0.61;0.68;0.77;0.85;0.93;1"
+        values="150;133;112;119;103;86;97;76;88;107;124;141;158;150"/>
+    </circle>
+    <circle class="walk" r="1.4">
+      <animate attributeName="cx" dur="37s" repeatCount="indefinite"
+        keyTimes="0;0.06;0.15;0.21;0.31;0.39;0.48;0.56;0.65;0.72;0.81;0.89;0.95;1"
+        values="700;683;691;668;655;672;649;661;638;652;669;684;693;700"/>
+      <animate attributeName="cy" dur="37s" repeatCount="indefinite"
+        keyTimes="0;0.06;0.15;0.21;0.31;0.39;0.48;0.56;0.65;0.72;0.81;0.89;0.95;1"
+        values="120;138;155;142;160;177;164;182;169;151;138;126;131;120"/>
+    </circle>
+    <circle class="walk" r="1.5">
+      <animate attributeName="cx" dur="29s" repeatCount="indefinite"
+        keyTimes="0;0.09;0.16;0.24;0.33;0.41;0.5;0.58;0.67;0.74;0.83;0.9;0.96;1"
+        values="320;337;329;348;364;356;375;367;349;332;315;298;309;320"/>
+      <animate attributeName="cy" dur="29s" repeatCount="indefinite"
+        keyTimes="0;0.09;0.16;0.24;0.33;0.41;0.5;0.58;0.67;0.74;0.83;0.9;0.96;1"
+        values="90;73;56;67;51;68;58;75;62;79;68;85;74;90"/>
+    </circle>
+    <circle class="walk" r="1.3">
+      <animate attributeName="cx" dur="34s" repeatCount="indefinite"
+        keyTimes="0;0.08;0.17;0.25;0.34;0.43;0.51;0.6;0.69;0.76;0.84;0.91;0.97;1"
+        values="500;483;497;478;462;479;465;482;499;516;533;519;508;500"/>
+      <animate attributeName="cy" dur="34s" repeatCount="indefinite"
+        keyTimes="0;0.08;0.17;0.25;0.34;0.43;0.51;0.6;0.69;0.76;0.84;0.91;0.97;1"
+        values="230;213;226;209;222;205;218;201;214;227;240;231;238;230"/>
+    </circle>
+    <circle class="walk" r="1.5">
+      <animate attributeName="cx" dur="27s" repeatCount="indefinite"
+        keyTimes="0;0.1;0.18;0.27;0.35;0.44;0.52;0.61;0.7;0.78;0.86;0.92;0.97;1"
+        values="790;773;789;806;823;809;826;812;795;778;795;811;798;790"/>
+      <animate attributeName="cy" dur="27s" repeatCount="indefinite"
+        keyTimes="0;0.1;0.18;0.27;0.35;0.44;0.52;0.61;0.7;0.78;0.86;0.92;0.97;1"
+        values="110;127;140;128;145;132;149;136;153;140;127;114;121;110"/>
+    </circle>
+  </g>
+
+  <!-- ── title ────────────────────────────────────────────────────── -->
+  <g opacity="0">
+    <animate attributeName="opacity" dur="1.6s" begin="0.4s" fill="freeze" values="0;1"/>
+    <animateTransform attributeName="transform" type="translate" dur="1.6s"
+                      begin="0.4s" fill="freeze" values="0,10; 0,0"/>
+    <text class="name" x="457" y="152" text-anchor="middle" filter="url(#softGlow)">WERSTI</text>
+  </g>
+
+  <g opacity="0">
+    <animate attributeName="opacity" dur="1.6s" begin="1.0s" fill="freeze" values="0;1"/>
+    <animateTransform attributeName="transform" type="translate" dur="1.6s"
+                      begin="1.0s" fill="freeze" values="0,8; 0,0"/>
+    <text class="sub" x="453" y="184" text-anchor="middle">MATHEMATICIAN · ENGINEER · BUILDER</text>
+  </g>
+</svg>
