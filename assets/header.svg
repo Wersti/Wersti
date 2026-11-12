@@ -4,276 +4,556 @@
   <defs>
     <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="2.4" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-
     <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
       <feGaussianBlur stdDeviation="6" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-
-    <radialGradient id="centerGlow" cx="50%" cy="52%" r="50%">
-      <stop offset="0%"   stop-color="#1f6feb" stop-opacity="0.16"/>
+    <radialGradient id="cg" cx="50%" cy="48%" r="48%">
+      <stop offset="0%"   stop-color="#1f6feb" stop-opacity="0.15"/>
       <stop offset="60%"  stop-color="#1f6feb" stop-opacity="0.04"/>
-      <stop offset="100%" stop-color="#0d1117" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1f6feb" stop-opacity="0"/>
     </radialGradient>
 
     <style>
-      .edge   { fill: none; stroke: #58a6ff; stroke-width: 0.8;
-                stroke-dasharray: 400; stroke-dashoffset: 400; }
-      .halo   { fill: #58a6ff; opacity: 0.09; }
-      .core   { fill: #58a6ff; }
-      .core-v { fill: #a371f7; }
-      .pulse  { fill: #a5d6ff; }
-      .walk   { fill: #6e7681; }
-      .wiener { fill: none; stroke: #21384f; stroke-width: 1.2;
-                stroke-linejoin: round; stroke-linecap: round;
-                stroke-dasharray: 1500; stroke-dashoffset: 1500; }
-      .name   { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                font-size: 44px; font-weight: 700; letter-spacing: 14px;
-                fill: #e6edf3; }
-      .sub    { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                font-size: 11px; font-weight: 400; letter-spacing: 6px;
-                fill: #7d8590; }
-      .eq     { font-family: Georgia, 'Times New Roman', serif;
-                font-size: 13px; font-style: italic; fill: #2d3d4f; }
+      :root {
+        --bg:  #0d1117; --rp:  #58a6ff; --lv:  #1f6feb; --ed:  #21262d;
+        --na:  #58a6ff; --nb:  #a371f7; --tx:  #e6edf3; --sb:  #7d8590;
+        --eq:  #2d3d4f; --pl:  #a5d6ff; --np:  #a371f7; --b1:  #1c3252;
+        --b2:  #2a1f42; --ch:  #21384f; --wk:  #6e7681;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg:  #f6f8fa; --rp:  #0969da; --lv:  #b6d4fb; --ed:  #d0d7de;
+          --na:  #0969da; --nb:  #8250df; --tx:  #1f2328; --sb:  #57606a;
+          --eq:  #9eaab8; --pl:  #0969da; --np:  #8250df; --b1:  #b6d4fb;
+          --b2:  #d8b4fe; --ch:  #b6d4fb; --wk:  #8c959f;
+        }
+      }
+      .bg  { fill: var(--bg); }
+      .ed  { fill: none; stroke: var(--ed); stroke-width: 0.7; }
+      .na  { fill: var(--na); } .nb { fill: var(--nb); }
+      .ha  { fill: var(--na); } .hb { fill: var(--nb); }
+      .b1  { fill: none; stroke: var(--b1); stroke-width: 1.1;
+             stroke-linejoin: round; stroke-linecap: round; }
+      .b2  { fill: none; stroke: var(--b2); stroke-width: 0.85;
+             stroke-linejoin: round; stroke-linecap: round; }
+      /* all rough paths share these base properties; dasharray/offset per element */
+      .rp  { fill: none; stroke: var(--rp); stroke-width: 1.5;
+             stroke-linejoin: round; stroke-linecap: round;
+             stroke-dasharray: 2600; stroke-dashoffset: 2600; }
+      .lv  { fill: var(--lv); }
+      .ch  { fill: none; stroke: var(--ch); stroke-width: 0.8; stroke-dasharray: 3 4; }
+      .pl  { fill: var(--pl); } .np { fill: var(--np); } .wk { fill: var(--wk); }
+      .nm  { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+             font-size: 44px; font-weight: 700; letter-spacing: 14px; fill: var(--tx); }
+      .sb  { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+             font-size: 11px; font-weight: 400; letter-spacing: 6px; fill: var(--sb); }
+      .eq  { font-family: Georgia, 'Times New Roman', serif;
+             font-size: 12px; font-style: italic; fill: var(--eq); }
+      /* market-making spread + quotes */
+      .ask { fill: none; stroke: var(--rp); stroke-width: 0.8;
+             stroke-dasharray: 2 3; stroke-linejoin: round; stroke-linecap: round; }
+      .bid { fill: none; stroke: var(--rp); stroke-width: 0.8;
+             stroke-dasharray: 2 3; stroke-linejoin: round; stroke-linecap: round; }
+      .spr { fill: none; stroke: var(--rp);
+             stroke-linejoin: round; stroke-linecap: round; }
+      .exf { fill: var(--tx); }
     </style>
   </defs>
 
   <!-- ── background ───────────────────────────────────────────────── -->
-  <rect width="900" height="300" fill="#0d1117"/>
-  <rect width="900" height="300" fill="url(#centerGlow)"/>
+  <rect width="900" height="300" class="bg"/>
+  <rect width="900" height="300" fill="url(#cg)"/>
 
-  <!-- ── Wiener process path (draws itself, bottom) ────────────────── -->
-  <path class="wiener" d="M50,268 L72,255 L88,274 L104,249 L122,262 L138,240
-    L156,253 L172,235 L190,249 L206,270 L224,256 L242,276 L258,259 L276,272
-    L294,253 L312,265 L330,243 L348,257 L366,238 L384,252 L402,268 L420,255
-    L438,274 L456,260 L474,277 L492,263 L510,245 L528,258 L546,240 L564,253
-    L582,269 L600,256 L618,272 L636,253 L654,265 L672,246 L690,259 L708,241
-    L726,254 L744,269 L762,255 L780,267 L798,248 L816,261 L834,244 L852,257">
-    <animate attributeName="stroke-dashoffset" dur="16s" repeatCount="indefinite"
-             values="1500;0;0;1500" keyTimes="0;0.45;0.9;1"/>
+  <!-- ── network edges ─────────────────────────────────────────────── -->
+  <g opacity="0.28">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite"
+             values="0.28;0.16;0.32;0.20;0.28"/>
+    <line class="ed" x1="80"  y1="55"  x2="185" y2="100"/>
+    <line class="ed" x1="185" y1="100" x2="120" y2="165"/>
+    <line class="ed" x1="80"  y1="55"  x2="270" y2="60"/>
+    <line class="ed" x1="185" y1="100" x2="270" y2="60"/>
+    <line class="ed" x1="270" y1="60"  x2="430" y2="48"/>
+    <line class="ed" x1="430" y1="48"  x2="590" y2="44"/>
+    <line class="ed" x1="590" y1="44"  x2="720" y2="70"/>
+    <line class="ed" x1="720" y1="70"  x2="855" y2="58"/>
+    <line class="ed" x1="720" y1="70"  x2="795" y2="145"/>
+    <line class="ed" x1="795" y1="145" x2="858" y2="188"/>
+    <line class="ed" x1="120" y1="165" x2="490" y2="175"/>
+    <line class="ed" x1="490" y1="175" x2="680" y2="168"/>
+    <line class="ed" x1="680" y1="168" x2="795" y2="145"/>
+    <line class="ed" x1="855" y1="58"  x2="795" y2="145"/>
+    <line class="ed" x1="430" y1="48"  x2="185" y2="100"/>
+  </g>
+
+  <!-- ── node halos (pulsating) ───────────────────────────────────── -->
+  <g opacity="0.14">
+    <animate attributeName="opacity" dur="17s" repeatCount="indefinite"
+             values="0.14;0.07;0.18;0.10;0.14"/>
+    <circle class="ha" cx="80"  cy="55" ><animate attributeName="r" dur="4.3s" repeatCount="indefinite" values="9;17;9"/></circle>
+    <circle class="ha" cx="185" cy="100"><animate attributeName="r" dur="5.1s" repeatCount="indefinite" values="10;19;10"/></circle>
+    <circle class="hb" cx="120" cy="165"><animate attributeName="r" dur="3.7s" repeatCount="indefinite" values="8;16;8"/></circle>
+    <circle class="ha" cx="270" cy="60" ><animate attributeName="r" dur="4.9s" repeatCount="indefinite" values="9;17;9"/></circle>
+    <circle class="ha" cx="430" cy="48" ><animate attributeName="r" dur="5.5s" repeatCount="indefinite" values="11;20;11"/></circle>
+    <circle class="hb" cx="590" cy="44" ><animate attributeName="r" dur="3.9s" repeatCount="indefinite" values="9;17;9"/></circle>
+    <circle class="ha" cx="720" cy="70" ><animate attributeName="r" dur="4.6s" repeatCount="indefinite" values="10;19;10"/></circle>
+    <circle class="ha" cx="795" cy="145"><animate attributeName="r" dur="5.3s" repeatCount="indefinite" values="10;19;10"/></circle>
+    <circle class="ha" cx="855" cy="58" ><animate attributeName="r" dur="3.8s" repeatCount="indefinite" values="8;15;8"/></circle>
+    <circle class="hb" cx="680" cy="168"><animate attributeName="r" dur="5.0s" repeatCount="indefinite" values="9;17;9"/></circle>
+    <circle class="ha" cx="858" cy="188"><animate attributeName="r" dur="4.2s" repeatCount="indefinite" values="8;15;8"/></circle>
+    <circle class="ha" cx="490" cy="175"><animate attributeName="r" dur="4.6s" repeatCount="indefinite" values="9;17;9"/></circle>
+  </g>
+
+  <!-- ── network nodes ─────────────────────────────────────────────── -->
+  <g opacity="0.22" filter="url(#glow)">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite"
+             values="0.22;0.12;0.28;0.16;0.22"/>
+    <circle class="na" cx="80"  cy="55"  r="3.0"/>
+    <circle class="na" cx="185" cy="100" r="3.6"/>
+    <circle class="nb" cx="120" cy="165" r="2.8"/>
+    <circle class="na" cx="270" cy="60"  r="3.0"/>
+    <circle class="na" cx="430" cy="48"  r="3.6"/>
+    <circle class="nb" cx="590" cy="44"  r="3.0"/>
+    <circle class="na" cx="720" cy="70"  r="3.6"/>
+    <circle class="na" cx="795" cy="145" r="3.6"/>
+    <circle class="na" cx="855" cy="58"  r="2.8"/>
+    <circle class="nb" cx="680" cy="168" r="3.0"/>
+    <circle class="na" cx="858" cy="188" r="2.8"/>
+    <circle class="na" cx="490" cy="175" r="3.0"/>
+  </g>
+
+  <!-- ── activation pulses along all main network edges ───────────── -->
+  <g filter="url(#glow)">
+    <circle class="np" r="1.8" opacity="0">
+      <animateMotion dur="2.2s" begin="1.8s"  repeatCount="indefinite" path="M80,55 L185,100"/>
+      <animate attributeName="opacity" dur="2.2s" begin="1.8s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+    <circle class="pl" r="1.8" opacity="0">
+      <animateMotion dur="1.6s" begin="3.2s"  repeatCount="indefinite" path="M185,100 L270,60"/>
+      <animate attributeName="opacity" dur="1.6s" begin="3.2s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+    <circle class="np" r="1.8" opacity="0">
+      <animateMotion dur="2.8s" begin="2.5s"  repeatCount="indefinite" path="M270,60 L430,48"/>
+      <animate attributeName="opacity" dur="2.8s" begin="2.5s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+    <circle class="pl" r="1.8" opacity="0">
+      <animateMotion dur="2.5s" begin="3.8s"  repeatCount="indefinite" path="M430,48 L590,44"/>
+      <animate attributeName="opacity" dur="2.5s" begin="3.8s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+    <circle class="np" r="1.8" opacity="0">
+      <animateMotion dur="3.2s" begin="1.5s"  repeatCount="indefinite" path="M590,44 L720,70"/>
+      <animate attributeName="opacity" dur="3.2s" begin="1.5s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+    <circle class="pl" r="1.8" opacity="0">
+      <animateMotion dur="2.0s" begin="4.0s"  repeatCount="indefinite" path="M720,70 L855,58"/>
+      <animate attributeName="opacity" dur="2.0s" begin="4.0s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+    <circle class="np" r="1.8" opacity="0">
+      <animateMotion dur="2.8s" begin="2.8s"  repeatCount="indefinite" path="M720,70 L795,145"/>
+      <animate attributeName="opacity" dur="2.8s" begin="2.8s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+    <circle class="pl" r="1.8" opacity="0">
+      <animateMotion dur="3.5s" begin="3.2s"  repeatCount="indefinite" path="M490,175 L680,168"/>
+      <animate attributeName="opacity" dur="3.5s" begin="3.2s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+    <circle class="np" r="1.8" opacity="0">
+      <animateMotion dur="3.8s" begin="3.6s"  repeatCount="indefinite" path="M680,168 L795,145"/>
+      <animate attributeName="opacity" dur="3.8s" begin="3.6s"  repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.10;0.88;1"/>
+    </circle>
+  </g>
+
+  <!-- ── bg path 1: smooth (H ≈ 0.8) ─────────────────────────────── -->
+  <path class="b1" opacity="0.4"
+    d="M50,213 C160,202 240,217 330,207 C420,197 500,214 580,205 C660,196 750,210 850,203"/>
+
+  <!-- ── bg path 2: very rough (H ≈ 0.2) ─────────────────────────── -->
+  <path class="b2" opacity="0.35"
+    d="M50,252 L63,241 L71,256 L80,239 L88,254 L97,240 L106,256 L115,241 L124,258
+       L133,241 L142,259 L152,242 L161,257 L170,241 L180,258 L189,242 L199,257
+       L208,241 L218,256 L227,242 L237,254 L247,241 L257,255 L266,241 L276,256
+       L286,241 L295,256 L305,241 L315,258 L325,242 L335,258 L344,243 L354,257
+       L364,241 L374,256 L383,241 L393,257 L403,241 L413,257 L423,242 L433,258
+       L443,242 L453,258 L463,242 L473,256 L483,242 L493,257 L502,242 L512,259
+       L522,242 L532,258 L542,242 L551,258 L561,242 L571,257 L581,241 L591,256
+       L600,241 L610,257 L620,241 L630,257 L640,241 L650,256 L659,241 L669,256
+       L679,241 L689,256 L698,241 L708,256 L718,241 L728,258 L738,241 L748,258
+       L757,241 L767,256 L777,241 L787,256 L796,241 L806,257 L816,241 L826,255
+       L836,241 L846,253 L850,250"/>
+
+  <!-- ── Lévy areas + chords ────────────────────────────────────────── -->
+  <path class="lv" opacity="0"
+    d="M50,230 L68,218 L76,236 L85,212 L93,230 L102,216 L110,238 L120,222
+       L130,240 L140,218 L150,234 L160,214 L170,230 L180,246 L190,220 L200,236 Z">
+    <animate attributeName="opacity" begin="2.0s" dur="1.0s" fill="freeze" values="0;0.13"/>
+    <animate attributeName="opacity" begin="3.2s" dur="9s"  repeatCount="indefinite" values="0.13;0.07;0.16;0.09;0.13"/>
+  </path>
+  <line class="ch" x1="50" y1="230" x2="200" y2="236" opacity="0">
+    <animate attributeName="opacity" begin="2.0s" dur="1.0s" fill="freeze" values="0;1"/>
+  </line>
+
+  <path class="lv" opacity="0"
+    d="M302,248 L312,222 L322,238 L332,218 L342,232 L352,215 L362,230 L372,247
+       L382,220 L392,236 L402,218 L412,232 L422,215 L432,230 L442,247 L452,220 Z">
+    <animate attributeName="opacity" begin="4.6s" dur="1.0s" fill="freeze" values="0;0.13"/>
+    <animate attributeName="opacity" begin="5.8s" dur="11s" repeatCount="indefinite" values="0.13;0.08;0.17;0.10;0.13"/>
+  </path>
+  <line class="ch" x1="302" y1="248" x2="452" y2="220" opacity="0">
+    <animate attributeName="opacity" begin="4.6s" dur="1.0s" fill="freeze" values="0;1"/>
+  </line>
+
+  <path class="lv" opacity="0"
+    d="M552,220 L562,235 L572,218 L582,232 L592,248 L602,220 L612,235 L622,218
+       L632,232 L642,248 L652,220 L662,236 L672,218 L682,232 L692,248 L702,220 Z">
+    <animate attributeName="opacity" begin="7.4s" dur="1.0s" fill="freeze" values="0;0.13"/>
+    <animate attributeName="opacity" begin="8.6s" dur="13s" repeatCount="indefinite" values="0.13;0.07;0.15;0.11;0.13"/>
+  </path>
+  <line class="ch" x1="552" y1="220" x2="702" y2="220" opacity="0">
+    <animate attributeName="opacity" begin="7.4s" dur="1.0s" fill="freeze" values="0;1"/>
+  </line>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MARKET MAKING — rough path = mid-price; bid/ask = standing quotes
+       The market maker posts δ above/below mid and earns the spread
+  ══════════════════════════════════════════════════════════════════ -->
+  <g opacity="0">
+    <animate attributeName="opacity" dur="2s" begin="1.5s" fill="freeze" values="0;1"/>
+    <!-- spread band (thick soft stroke around mid) -->
+    <path class="spr" stroke-width="20" opacity="0.045"
+      d="M50,230 L68,218 L76,236 L85,212 L93,230 L102,216 L110,238 L120,222
+         L130,240 L140,218 L150,234 L160,214 L170,230 L180,246 L190,220 L200,236
+         L210,216 L222,232 L232,214 L242,230 L252,246 L262,220 L272,236 L282,216
+         L292,230 L302,248 L312,222 L322,238 L332,218 L342,232 L352,215 L362,230
+         L372,247 L382,220 L392,236 L402,218 L412,232 L422,215 L432,230 L442,247
+         L452,220 L462,235 L472,218 L482,232 L492,248 L502,220 L512,235 L522,218
+         L532,232 L542,248 L552,220 L562,235 L572,218 L582,232 L592,248 L602,220
+         L612,235 L622,218 L632,232 L642,248 L652,220 L662,236 L672,218 L682,232
+         L692,248 L702,220 L712,236 L722,218 L732,234 L742,250 L752,224 L762,240
+         L772,222 L782,238 L792,220 L802,236 L812,218 L822,234 L832,250 L842,224
+         L850,238"/>
+    <!-- ask quote: posted above mid (lower y = higher price) -->
+    <path class="ask" opacity="0.28"
+      d="M50,221 L68,209 L76,227 L85,203 L93,221 L102,207 L110,229 L120,213
+         L130,231 L140,209 L150,225 L160,205 L170,221 L180,237 L190,211 L200,227
+         L210,207 L222,223 L232,205 L242,221 L252,237 L262,211 L272,227 L282,207
+         L292,221 L302,239 L312,213 L322,229 L332,209 L342,223 L352,206 L362,221
+         L372,238 L382,211 L392,227 L402,209 L412,223 L422,206 L432,221 L442,238
+         L452,211 L462,226 L472,209 L482,223 L492,239 L502,211 L512,226 L522,209
+         L532,223 L542,239 L552,211 L562,226 L572,209 L582,223 L592,239 L602,211
+         L612,226 L622,209 L632,223 L642,239 L652,211 L662,227 L672,209 L682,223
+         L692,239 L702,211 L712,227 L722,209 L732,225 L742,241 L752,215 L762,231
+         L772,213 L782,229 L792,211 L802,227 L812,209 L822,225 L832,241 L842,215
+         L850,229"/>
+    <!-- bid quote: posted below mid (higher y = lower price) -->
+    <path class="bid" opacity="0.28"
+      d="M50,239 L68,227 L76,245 L85,221 L93,239 L102,225 L110,247 L120,231
+         L130,249 L140,227 L150,243 L160,223 L170,239 L180,255 L190,229 L200,245
+         L210,225 L222,241 L232,223 L242,239 L252,255 L262,229 L272,245 L282,225
+         L292,239 L302,257 L312,231 L322,247 L332,227 L342,241 L352,224 L362,239
+         L372,256 L382,229 L392,245 L402,227 L412,241 L422,224 L432,239 L442,256
+         L452,229 L462,244 L472,227 L482,241 L492,257 L502,229 L512,244 L522,227
+         L532,241 L542,257 L552,229 L562,244 L572,227 L582,241 L592,257 L602,229
+         L612,244 L622,227 L632,241 L642,257 L652,229 L662,245 L672,227 L682,241
+         L692,257 L702,229 L712,245 L722,227 L732,243 L742,259 L752,233 L762,249
+         L772,231 L782,247 L792,229 L802,245 L812,227 L822,243 L832,259 L842,233
+         L850,247"/>
+  </g>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MONTE CARLO PATHS — three independent realisations, looping
+       Cycle: 24s · draw 0-9s · hold 9-18s · fade 18-21s · reset 21-24s
+  ══════════════════════════════════════════════════════════════════ -->
+
+  <!-- realisation B · drifts upward from shared origin (50,230) -->
+  <!-- same start point as A, diverges as a distinct stochastic sample -->
+  <path class="rp" opacity="0"
+    d="M50,230 L68,215 L76,231 L85,208 L93,224 L102,211 L110,232 L120,218
+       L130,234 L140,213 L150,228 L160,209 L170,223 L180,239 L190,214 L200,229
+       L210,210 L222,225 L232,208 L242,223 L252,238 L262,213 L272,228 L282,210
+       L292,223 L302,240 L312,215 L322,230 L332,211 L342,224 L352,208 L362,222
+       L372,238 L382,212 L392,227 L402,210 L412,223 L422,207 L432,221 L442,236
+       L452,211 L462,225 L472,209 L482,222 L492,237 L502,212 L512,226 L522,209
+       L532,222 L542,237 L552,212 L562,225 L572,209 L582,221 L592,236 L602,211
+       L612,225 L622,208 L632,221 L642,235 L652,210 L662,224 L672,208 L682,221
+       L692,236 L702,210 L712,224 L722,208 L732,222 L742,237 L752,213 L762,227
+       L772,210 L782,225 L792,208 L802,222 L812,206 L822,220 L832,234 L842,210
+       L850,222">
+    <animate attributeName="stroke-dashoffset" dur="24s" begin="8s" repeatCount="indefinite"
+             values="2600;0;0;2600;2600" keyTimes="0;0.375;0.75;0.751;1"/>
+    <animate attributeName="opacity" dur="24s" begin="8s" repeatCount="indefinite"
+             values="0;0.38;0.38;0.38;0;0" keyTimes="0;0.021;0.375;0.74;0.875;1"/>
   </path>
 
-  <!-- signature: the SDE that generates that path -->
-  <text class="eq" x="50" y="240" opacity="0">
-    <animate attributeName="opacity" dur="2s" begin="2.2s" fill="freeze" values="0;1"/>
-    dX<tspan dy="4" font-size="9">t</tspan><tspan dy="-4"> = μ dt + σ dW</tspan><tspan dy="4" font-size="9">t</tspan>
-  </text>
+  <!-- realisation C · drifts downward from shared origin (50,230) -->
+  <path class="rp" opacity="0"
+    d="M50,230 L68,221 L76,239 L85,216 L93,234 L102,219 L110,242 L120,226
+       L130,244 L140,222 L150,238 L160,218 L170,235 L180,251 L190,225 L200,241
+       L210,221 L222,237 L232,219 L242,235 L252,251 L262,226 L272,242 L282,222
+       L292,237 L302,254 L312,228 L322,244 L332,224 L342,238 L352,222 L362,237
+       L372,253 L382,227 L392,243 L402,225 L412,239 L422,222 L432,237 L442,253
+       L452,227 L462,242 L472,225 L482,239 L492,254 L502,228 L512,242 L522,226
+       L532,240 L542,255 L552,229 L562,243 L572,227 L582,241 L592,256 L602,230
+       L612,244 L622,228 L632,242 L642,257 L652,231 L662,246 L672,229 L682,243
+       L692,258 L702,232 L712,247 L722,230 L732,245 L742,260 L752,234 L762,250
+       L772,232 L782,248 L792,231 L802,247 L812,230 L822,246 L832,261 L842,235
+       L850,250">
+    <animate attributeName="stroke-dashoffset" dur="24s" begin="16s" repeatCount="indefinite"
+             values="2600;0;0;2600;2600" keyTimes="0;0.375;0.75;0.751;1"/>
+    <animate attributeName="opacity" dur="24s" begin="16s" repeatCount="indefinite"
+             values="0;0.28;0.28;0.28;0;0" keyTimes="0;0.021;0.375;0.74;0.875;1"/>
+  </path>
 
-  <!-- ── network edges (self-drawing, then breathing) ──────────────── -->
-  <g>
-    <path id="e1"  class="edge" d="M60,58 L150,118"/>
-    <path id="e2"  class="edge" d="M150,118 L88,190"/>
-    <path id="e3"  class="edge" d="M60,58 L222,62"/>
-    <path id="e4"  class="edge" d="M150,118 L222,62"/>
-    <path id="e5"  class="edge" d="M88,190 L255,205"/>
-    <path id="e6"  class="edge" d="M222,62 L398,46"/>
-    <path id="e7"  class="edge" d="M398,46 L556,42"/>
-    <path id="e8"  class="edge" d="M255,205 L452,212"/>
-    <path id="e9"  class="edge" d="M556,42 L688,68"/>
-    <path id="e10" class="edge" d="M688,68 L838,62"/>
-    <path id="e11" class="edge" d="M688,68 L762,150"/>
-    <path id="e12" class="edge" d="M762,150 L842,198"/>
-    <path id="e13" class="edge" d="M452,212 L648,205"/>
-    <path id="e14" class="edge" d="M648,205 L762,150"/>
-    <path id="e15" class="edge" d="M838,62 L762,150"/>
-    <path id="e16" class="edge" d="M398,46 L150,118"/>
+  <!-- realisation A · main path · looping · opacity max 1.0 -->
+  <path id="rp" class="rp" opacity="0"
+    d="M50,230 L68,218 L76,236 L85,212 L93,230 L102,216 L110,238 L120,222
+       L130,240 L140,218 L150,234 L160,214 L170,230 L180,246 L190,220 L200,236
+       L210,216 L222,232 L232,214 L242,230 L252,246 L262,220 L272,236 L282,216
+       L292,230 L302,248 L312,222 L322,238 L332,218 L342,232 L352,215 L362,230
+       L372,247 L382,220 L392,236 L402,218 L412,232 L422,215 L432,230 L442,247
+       L452,220 L462,235 L472,218 L482,232 L492,248 L502,220 L512,235 L522,218
+       L532,232 L542,248 L552,220 L562,235 L572,218 L582,232 L592,248 L602,220
+       L612,235 L622,218 L632,232 L642,248 L652,220 L662,236 L672,218 L682,232
+       L692,248 L702,220 L712,236 L722,218 L732,234 L742,250 L752,224 L762,240
+       L772,222 L782,238 L792,220 L802,236 L812,218 L822,234 L832,250 L842,224
+       L850,238">
+    <animate attributeName="stroke-dashoffset" dur="24s" begin="0s" repeatCount="indefinite"
+             values="2600;0;0;2600;2600" keyTimes="0;0.375;0.75;0.751;1"/>
+    <animate attributeName="opacity" dur="24s" begin="0s" repeatCount="indefinite"
+             values="0;1;1;1;0;0" keyTimes="0;0.021;0.375;0.74;0.875;1"/>
+  </path>
 
-    <!-- draw-in, staggered -->
-    <animate xlink:href="#e1"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.0s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e2"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.1s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e3"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.2s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e4"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.3s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e5"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.4s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e6"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.5s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e7"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.6s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e8"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.7s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e9"  attributeName="stroke-dashoffset" dur="1.4s" begin="0.8s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e10" attributeName="stroke-dashoffset" dur="1.4s" begin="0.9s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e11" attributeName="stroke-dashoffset" dur="1.4s" begin="1.0s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e12" attributeName="stroke-dashoffset" dur="1.4s" begin="1.1s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e13" attributeName="stroke-dashoffset" dur="1.4s" begin="1.2s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e14" attributeName="stroke-dashoffset" dur="1.4s" begin="1.3s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e15" attributeName="stroke-dashoffset" dur="1.4s" begin="1.4s" fill="freeze" values="400;0"/>
-    <animate xlink:href="#e16" attributeName="stroke-dashoffset" dur="1.4s" begin="1.5s" fill="freeze" values="400;0"/>
-
-    <!-- independent opacity breathing, irregular periods -->
-    <animate xlink:href="#e1"  attributeName="opacity" dur="9s"  begin="1.6s" repeatCount="indefinite" values="0.30;0.55;0.18;0.42;0.30"/>
-    <animate xlink:href="#e2"  attributeName="opacity" dur="11s" begin="1.7s" repeatCount="indefinite" values="0.24;0.14;0.48;0.22;0.24"/>
-    <animate xlink:href="#e3"  attributeName="opacity" dur="13s" begin="1.8s" repeatCount="indefinite" values="0.28;0.50;0.20;0.38;0.28"/>
-    <animate xlink:href="#e4"  attributeName="opacity" dur="8s"  begin="1.9s" repeatCount="indefinite" values="0.20;0.44;0.16;0.52;0.20"/>
-    <animate xlink:href="#e5"  attributeName="opacity" dur="12s" begin="2.0s" repeatCount="indefinite" values="0.32;0.18;0.46;0.26;0.32"/>
-    <animate xlink:href="#e6"  attributeName="opacity" dur="10s" begin="2.1s" repeatCount="indefinite" values="0.26;0.52;0.22;0.40;0.26"/>
-    <animate xlink:href="#e7"  attributeName="opacity" dur="14s" begin="2.2s" repeatCount="indefinite" values="0.30;0.16;0.50;0.24;0.30"/>
-    <animate xlink:href="#e8"  attributeName="opacity" dur="9.5s" begin="2.3s" repeatCount="indefinite" values="0.22;0.46;0.18;0.36;0.22"/>
-    <animate xlink:href="#e9"  attributeName="opacity" dur="11.5s" begin="2.4s" repeatCount="indefinite" values="0.28;0.20;0.54;0.24;0.28"/>
-    <animate xlink:href="#e10" attributeName="opacity" dur="13.5s" begin="2.5s" repeatCount="indefinite" values="0.24;0.48;0.16;0.40;0.24"/>
-    <animate xlink:href="#e11" attributeName="opacity" dur="8.5s" begin="2.6s" repeatCount="indefinite" values="0.30;0.18;0.44;0.28;0.30"/>
-    <animate xlink:href="#e12" attributeName="opacity" dur="12.5s" begin="2.7s" repeatCount="indefinite" values="0.20;0.42;0.24;0.50;0.20"/>
-    <animate xlink:href="#e13" attributeName="opacity" dur="10.5s" begin="2.8s" repeatCount="indefinite" values="0.26;0.16;0.46;0.30;0.26"/>
-    <animate xlink:href="#e14" attributeName="opacity" dur="14.5s" begin="2.9s" repeatCount="indefinite" values="0.22;0.50;0.20;0.34;0.22"/>
-    <animate xlink:href="#e15" attributeName="opacity" dur="9.8s" begin="3.0s" repeatCount="indefinite" values="0.28;0.20;0.44;0.26;0.28"/>
-    <animate xlink:href="#e16" attributeName="opacity" dur="11.8s" begin="3.1s" repeatCount="indefinite" values="0.18;0.40;0.22;0.46;0.18"/>
-  </g>
-
-  <!-- ── activation pulses travelling along the edges ──────────────── -->
+  <!-- ── execution flashes: price touches bid/ask quote ──────────── -->
+  <!-- flash when mid-price reaches ask (peak) or bid (trough)       -->
+  <!-- timing matched to 24s loop: keyTime = draw_time / 24         -->
   <g filter="url(#glow)">
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="3.2s" begin="1.8s" repeatCount="indefinite"><mpath xlink:href="#e3"/></animateMotion>
-      <animate attributeName="opacity" dur="3.2s" begin="1.8s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    <!-- ask execution at (85,203) t≈0.39s → keyTime 0.016 -->
+    <circle class="exf" cx="85" cy="203" r="2" opacity="0">
+      <animate attributeName="opacity" dur="24s" begin="0s" repeatCount="indefinite"
+               values="0;0;1;0.4;0;0" keyTimes="0;0.014;0.016;0.022;0.032;1"/>
+      <animate attributeName="r" dur="24s" begin="0s" repeatCount="indefinite"
+               values="1.5;1.5;5;9;1.5;1.5" keyTimes="0;0.014;0.016;0.022;0.032;1"/>
     </circle>
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="3.8s" begin="2.4s" repeatCount="indefinite"><mpath xlink:href="#e6"/></animateMotion>
-      <animate attributeName="opacity" dur="3.8s" begin="2.4s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    <!-- bid execution at (130,249) t≈0.90s → keyTime 0.038 -->
+    <circle class="exf" cx="130" cy="249" r="2" opacity="0">
+      <animate attributeName="opacity" dur="24s" begin="0s" repeatCount="indefinite"
+               values="0;0;1;0.4;0;0" keyTimes="0;0.036;0.038;0.044;0.054;1"/>
+      <animate attributeName="r" dur="24s" begin="0s" repeatCount="indefinite"
+               values="1.5;1.5;5;9;1.5;1.5" keyTimes="0;0.036;0.038;0.044;0.054;1"/>
     </circle>
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="3.4s" begin="3.1s" repeatCount="indefinite"><mpath xlink:href="#e7"/></animateMotion>
-      <animate attributeName="opacity" dur="3.4s" begin="3.1s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    <!-- ask execution at (352,206) t≈3.40s → keyTime 0.142 -->
+    <circle class="exf" cx="352" cy="206" r="2" opacity="0">
+      <animate attributeName="opacity" dur="24s" begin="0s" repeatCount="indefinite"
+               values="0;0;1;0.4;0;0" keyTimes="0;0.140;0.142;0.148;0.158;1"/>
+      <animate attributeName="r" dur="24s" begin="0s" repeatCount="indefinite"
+               values="1.5;1.5;5;9;1.5;1.5" keyTimes="0;0.140;0.142;0.148;0.158;1"/>
     </circle>
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="4.2s" begin="2.0s" repeatCount="indefinite"><mpath xlink:href="#e9"/></animateMotion>
-      <animate attributeName="opacity" dur="4.2s" begin="2.0s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    <!-- bid execution at (492,257) t≈4.97s → keyTime 0.207 -->
+    <circle class="exf" cx="492" cy="257" r="2" opacity="0">
+      <animate attributeName="opacity" dur="24s" begin="0s" repeatCount="indefinite"
+               values="0;0;1;0.4;0;0" keyTimes="0;0.205;0.207;0.213;0.223;1"/>
+      <animate attributeName="r" dur="24s" begin="0s" repeatCount="indefinite"
+               values="1.5;1.5;5;9;1.5;1.5" keyTimes="0;0.205;0.207;0.213;0.223;1"/>
     </circle>
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="3.6s" begin="3.6s" repeatCount="indefinite"><mpath xlink:href="#e11"/></animateMotion>
-      <animate attributeName="opacity" dur="3.6s" begin="3.6s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
-    </circle>
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="4.6s" begin="2.7s" repeatCount="indefinite"><mpath xlink:href="#e13"/></animateMotion>
-      <animate attributeName="opacity" dur="4.6s" begin="2.7s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
-    </circle>
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="4.0s" begin="4.2s" repeatCount="indefinite"><mpath xlink:href="#e5"/></animateMotion>
-      <animate attributeName="opacity" dur="4.0s" begin="4.2s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
-    </circle>
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="5.0s" begin="3.3s" repeatCount="indefinite"><mpath xlink:href="#e16"/></animateMotion>
-      <animate attributeName="opacity" dur="5.0s" begin="3.3s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
-    </circle>
-    <circle class="pulse" r="2.2" opacity="0">
-      <animateMotion dur="3.5s" begin="4.8s" repeatCount="indefinite"><mpath xlink:href="#e10"/></animateMotion>
-      <animate attributeName="opacity" dur="3.5s" begin="4.8s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.85;1"/>
+    <!-- ask execution at (622,209) t≈6.39s → keyTime 0.266 -->
+    <circle class="exf" cx="622" cy="209" r="2" opacity="0">
+      <animate attributeName="opacity" dur="24s" begin="0s" repeatCount="indefinite"
+               values="0;0;1;0.4;0;0" keyTimes="0;0.264;0.266;0.272;0.282;1"/>
+      <animate attributeName="r" dur="24s" begin="0s" repeatCount="indefinite"
+               values="1.5;1.5;5;9;1.5;1.5" keyTimes="0;0.264;0.266;0.272;0.282;1"/>
     </circle>
   </g>
 
-  <!-- ── nodes (halo breathes, whole node drifts slightly) ─────────── -->
-  <g>
-    <g><animateTransform attributeName="transform" type="translate" dur="17s" repeatCount="indefinite" values="0,0; 2,-3; -2,2; 3,1; 0,0"/>
-      <circle class="halo" cx="60" cy="58" r="15"><animate attributeName="r" dur="4.3s" repeatCount="indefinite" values="13;21;13"/></circle>
-      <circle class="core" cx="60" cy="58" r="3.6" filter="url(#glow)"/></g>
+  <!-- ── pulse travelling along main path ─────────────────────────── -->
+  <circle class="pl" r="2.5" opacity="0" filter="url(#glow)">
+    <animateMotion dur="7s" begin="3.5s" repeatCount="indefinite">
+      <mpath xlink:href="#rp"/>
+    </animateMotion>
+    <animate attributeName="opacity" dur="7s" begin="3.5s" repeatCount="indefinite"
+             values="0;1;1;0" keyTimes="0;0.07;0.93;1"/>
+  </circle>
 
-    <g><animateTransform attributeName="transform" type="translate" dur="19s" repeatCount="indefinite" values="0,0; -3,2; 2,3; -1,-2; 0,0"/>
-      <circle class="halo" cx="150" cy="118" r="15"><animate attributeName="r" dur="5.1s" repeatCount="indefinite" values="13;22;13"/></circle>
-      <circle class="core" cx="150" cy="118" r="4" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="23s" repeatCount="indefinite" values="0,0; 3,3; -2,-2; 1,3; 0,0"/>
-      <circle class="halo" cx="88" cy="190" r="15"><animate attributeName="r" dur="3.7s" repeatCount="indefinite" values="12;20;12"/></circle>
-      <circle class="core-v" cx="88" cy="190" r="3.4" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="15s" repeatCount="indefinite" values="0,0; -2,-3; 3,-1; -3,2; 0,0"/>
-      <circle class="halo" cx="222" cy="62" r="15"><animate attributeName="r" dur="4.9s" repeatCount="indefinite" values="13;21;13"/></circle>
-      <circle class="core" cx="222" cy="62" r="3.6" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="21s" repeatCount="indefinite" values="0,0; 2,3; -3,-1; 2,-3; 0,0"/>
-      <circle class="halo" cx="255" cy="205" r="15"><animate attributeName="r" dur="4.1s" repeatCount="indefinite" values="12;20;12"/></circle>
-      <circle class="core" cx="255" cy="205" r="3.4" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="18s" repeatCount="indefinite" values="0,0; -3,1; 1,-3; 3,2; 0,0"/>
-      <circle class="halo" cx="398" cy="46" r="15"><animate attributeName="r" dur="5.5s" repeatCount="indefinite" values="14;23;14"/></circle>
-      <circle class="core" cx="398" cy="46" r="4.2" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="25s" repeatCount="indefinite" values="0,0; 3,-2; -1,3; -3,-1; 0,0"/>
-      <circle class="halo" cx="556" cy="42" r="15"><animate attributeName="r" dur="3.9s" repeatCount="indefinite" values="12;21;12"/></circle>
-      <circle class="core-v" cx="556" cy="42" r="3.6" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="16s" repeatCount="indefinite" values="0,0; -2,3; 3,1; -1,-3; 0,0"/>
-      <circle class="halo" cx="452" cy="212" r="15"><animate attributeName="r" dur="4.6s" repeatCount="indefinite" values="13;21;13"/></circle>
-      <circle class="core" cx="452" cy="212" r="3.6" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="22s" repeatCount="indefinite" values="0,0; 2,2; -3,-2; 1,3; 0,0"/>
-      <circle class="halo" cx="688" cy="68" r="15"><animate attributeName="r" dur="5.3s" repeatCount="indefinite" values="14;23;14"/></circle>
-      <circle class="core" cx="688" cy="68" r="4.2" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="20s" repeatCount="indefinite" values="0,0; -3,-2; 2,3; 3,-1; 0,0"/>
-      <circle class="halo" cx="762" cy="150" r="15"><animate attributeName="r" dur="4.4s" repeatCount="indefinite" values="13;22;13"/></circle>
-      <circle class="core" cx="762" cy="150" r="4" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="24s" repeatCount="indefinite" values="0,0; 3,2; -2,-3; -1,2; 0,0"/>
-      <circle class="halo" cx="838" cy="62" r="15"><animate attributeName="r" dur="3.8s" repeatCount="indefinite" values="12;20;12"/></circle>
-      <circle class="core" cx="838" cy="62" r="3.4" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="26s" repeatCount="indefinite" values="0,0; -2,2; 3,-3; -3,1; 0,0"/>
-      <circle class="halo" cx="648" cy="205" r="15"><animate attributeName="r" dur="5.0s" repeatCount="indefinite" values="13;21;13"/></circle>
-      <circle class="core-v" cx="648" cy="205" r="3.6" filter="url(#glow)"/></g>
-
-    <g><animateTransform attributeName="transform" type="translate" dur="14s" repeatCount="indefinite" values="0,0; 2,-2; -3,3; 1,2; 0,0"/>
-      <circle class="halo" cx="842" cy="198" r="15"><animate attributeName="r" dur="4.2s" repeatCount="indefinite" values="12;20;12"/></circle>
-      <circle class="core" cx="842" cy="198" r="3.4" filter="url(#glow)"/></g>
-  </g>
-
-  <!-- ── free particles: irregular random walk ─────────────────────── -->
-  <g opacity="0.5">
-    <circle class="walk" r="1.6">
-      <animate attributeName="cx" dur="31s" repeatCount="indefinite"
+  <!-- ══════════════════════════════════════════════════════════════
+       FREE PARTICLES — irregular random walk with trailing ghosts
+  ══════════════════════════════════════════════════════════════════ -->
+  <g opacity="0.55">
+    <!-- particle 1 -->
+    <circle class="wk" cx="120" cy="150" r="0.9" opacity="0.22">
+      <animate attributeName="cx" dur="31s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.07;0.13;0.22;0.29;0.36;0.45;0.53;0.61;0.68;0.77;0.85;0.93;1"
         values="120;138;131;152;168;159;181;174;196;188;171;149;133;120"/>
-      <animate attributeName="cy" dur="31s" repeatCount="indefinite"
+      <animate attributeName="cy" dur="31s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.07;0.13;0.22;0.29;0.36;0.45;0.53;0.61;0.68;0.77;0.85;0.93;1"
         values="150;133;112;119;103;86;97;76;88;107;124;141;158;150"/>
     </circle>
-    <circle class="walk" r="1.4">
-      <animate attributeName="cx" dur="37s" repeatCount="indefinite"
+    <circle class="wk" cx="120" cy="150" r="1.4" opacity="0.42">
+      <animate attributeName="cx" dur="31s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.07;0.13;0.22;0.29;0.36;0.45;0.53;0.61;0.68;0.77;0.85;0.93;1"
+        values="120;138;131;152;168;159;181;174;196;188;171;149;133;120"/>
+      <animate attributeName="cy" dur="31s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.07;0.13;0.22;0.29;0.36;0.45;0.53;0.61;0.68;0.77;0.85;0.93;1"
+        values="150;133;112;119;103;86;97;76;88;107;124;141;158;150"/>
+    </circle>
+    <circle class="wk" r="2.0">
+      <animate attributeName="cx" dur="31s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.07;0.13;0.22;0.29;0.36;0.45;0.53;0.61;0.68;0.77;0.85;0.93;1"
+        values="120;138;131;152;168;159;181;174;196;188;171;149;133;120"/>
+      <animate attributeName="cy" dur="31s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.07;0.13;0.22;0.29;0.36;0.45;0.53;0.61;0.68;0.77;0.85;0.93;1"
+        values="150;133;112;119;103;86;97;76;88;107;124;141;158;150"/>
+    </circle>
+
+    <!-- particle 2 -->
+    <circle class="wk" cx="700" cy="120" r="0.8" opacity="0.22">
+      <animate attributeName="cx" dur="37s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.06;0.15;0.21;0.31;0.39;0.48;0.56;0.65;0.72;0.81;0.89;0.95;1"
         values="700;683;691;668;655;672;649;661;638;652;669;684;693;700"/>
-      <animate attributeName="cy" dur="37s" repeatCount="indefinite"
+      <animate attributeName="cy" dur="37s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.06;0.15;0.21;0.31;0.39;0.48;0.56;0.65;0.72;0.81;0.89;0.95;1"
         values="120;138;155;142;160;177;164;182;169;151;138;126;131;120"/>
     </circle>
-    <circle class="walk" r="1.5">
-      <animate attributeName="cx" dur="29s" repeatCount="indefinite"
+    <circle class="wk" cx="700" cy="120" r="1.2" opacity="0.42">
+      <animate attributeName="cx" dur="37s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.06;0.15;0.21;0.31;0.39;0.48;0.56;0.65;0.72;0.81;0.89;0.95;1"
+        values="700;683;691;668;655;672;649;661;638;652;669;684;693;700"/>
+      <animate attributeName="cy" dur="37s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.06;0.15;0.21;0.31;0.39;0.48;0.56;0.65;0.72;0.81;0.89;0.95;1"
+        values="120;138;155;142;160;177;164;182;169;151;138;126;131;120"/>
+    </circle>
+    <circle class="wk" r="1.8">
+      <animate attributeName="cx" dur="37s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.06;0.15;0.21;0.31;0.39;0.48;0.56;0.65;0.72;0.81;0.89;0.95;1"
+        values="700;683;691;668;655;672;649;661;638;652;669;684;693;700"/>
+      <animate attributeName="cy" dur="37s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.06;0.15;0.21;0.31;0.39;0.48;0.56;0.65;0.72;0.81;0.89;0.95;1"
+        values="120;138;155;142;160;177;164;182;169;151;138;126;131;120"/>
+    </circle>
+
+    <!-- particle 3 -->
+    <circle class="wk" cx="320" cy="90" r="0.85" opacity="0.22">
+      <animate attributeName="cx" dur="29s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.09;0.16;0.24;0.33;0.41;0.5;0.58;0.67;0.74;0.83;0.9;0.96;1"
         values="320;337;329;348;364;356;375;367;349;332;315;298;309;320"/>
-      <animate attributeName="cy" dur="29s" repeatCount="indefinite"
+      <animate attributeName="cy" dur="29s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.09;0.16;0.24;0.33;0.41;0.5;0.58;0.67;0.74;0.83;0.9;0.96;1"
         values="90;73;56;67;51;68;58;75;62;79;68;85;74;90"/>
     </circle>
-    <circle class="walk" r="1.3">
-      <animate attributeName="cx" dur="34s" repeatCount="indefinite"
+    <circle class="wk" cx="320" cy="90" r="1.3" opacity="0.42">
+      <animate attributeName="cx" dur="29s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.09;0.16;0.24;0.33;0.41;0.5;0.58;0.67;0.74;0.83;0.9;0.96;1"
+        values="320;337;329;348;364;356;375;367;349;332;315;298;309;320"/>
+      <animate attributeName="cy" dur="29s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.09;0.16;0.24;0.33;0.41;0.5;0.58;0.67;0.74;0.83;0.9;0.96;1"
+        values="90;73;56;67;51;68;58;75;62;79;68;85;74;90"/>
+    </circle>
+    <circle class="wk" r="1.9">
+      <animate attributeName="cx" dur="29s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.09;0.16;0.24;0.33;0.41;0.5;0.58;0.67;0.74;0.83;0.9;0.96;1"
+        values="320;337;329;348;364;356;375;367;349;332;315;298;309;320"/>
+      <animate attributeName="cy" dur="29s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.09;0.16;0.24;0.33;0.41;0.5;0.58;0.67;0.74;0.83;0.9;0.96;1"
+        values="90;73;56;67;51;68;58;75;62;79;68;85;74;90"/>
+    </circle>
+
+    <!-- particle 4 -->
+    <circle class="wk" cx="500" cy="230" r="0.7" opacity="0.22">
+      <animate attributeName="cx" dur="34s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.08;0.17;0.25;0.34;0.43;0.51;0.6;0.69;0.76;0.84;0.91;0.97;1"
         values="500;483;497;478;462;479;465;482;499;516;533;519;508;500"/>
-      <animate attributeName="cy" dur="34s" repeatCount="indefinite"
+      <animate attributeName="cy" dur="34s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.08;0.17;0.25;0.34;0.43;0.51;0.6;0.69;0.76;0.84;0.91;0.97;1"
         values="230;213;226;209;222;205;218;201;214;227;240;231;238;230"/>
     </circle>
-    <circle class="walk" r="1.5">
-      <animate attributeName="cx" dur="27s" repeatCount="indefinite"
+    <circle class="wk" cx="500" cy="230" r="1.1" opacity="0.42">
+      <animate attributeName="cx" dur="34s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.08;0.17;0.25;0.34;0.43;0.51;0.6;0.69;0.76;0.84;0.91;0.97;1"
+        values="500;483;497;478;462;479;465;482;499;516;533;519;508;500"/>
+      <animate attributeName="cy" dur="34s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.08;0.17;0.25;0.34;0.43;0.51;0.6;0.69;0.76;0.84;0.91;0.97;1"
+        values="230;213;226;209;222;205;218;201;214;227;240;231;238;230"/>
+    </circle>
+    <circle class="wk" r="1.7">
+      <animate attributeName="cx" dur="34s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.08;0.17;0.25;0.34;0.43;0.51;0.6;0.69;0.76;0.84;0.91;0.97;1"
+        values="500;483;497;478;462;479;465;482;499;516;533;519;508;500"/>
+      <animate attributeName="cy" dur="34s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.08;0.17;0.25;0.34;0.43;0.51;0.6;0.69;0.76;0.84;0.91;0.97;1"
+        values="230;213;226;209;222;205;218;201;214;227;240;231;238;230"/>
+    </circle>
+
+    <!-- particle 5 -->
+    <circle class="wk" cx="790" cy="110" r="0.85" opacity="0.22">
+      <animate attributeName="cx" dur="27s" begin="3.0s" repeatCount="indefinite"
         keyTimes="0;0.1;0.18;0.27;0.35;0.44;0.52;0.61;0.7;0.78;0.86;0.92;0.97;1"
         values="790;773;789;806;823;809;826;812;795;778;795;811;798;790"/>
-      <animate attributeName="cy" dur="27s" repeatCount="indefinite"
+      <animate attributeName="cy" dur="27s" begin="3.0s" repeatCount="indefinite"
+        keyTimes="0;0.1;0.18;0.27;0.35;0.44;0.52;0.61;0.7;0.78;0.86;0.92;0.97;1"
+        values="110;127;140;128;145;132;149;136;153;140;127;114;121;110"/>
+    </circle>
+    <circle class="wk" cx="790" cy="110" r="1.3" opacity="0.42">
+      <animate attributeName="cx" dur="27s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.1;0.18;0.27;0.35;0.44;0.52;0.61;0.7;0.78;0.86;0.92;0.97;1"
+        values="790;773;789;806;823;809;826;812;795;778;795;811;798;790"/>
+      <animate attributeName="cy" dur="27s" begin="1.5s" repeatCount="indefinite"
+        keyTimes="0;0.1;0.18;0.27;0.35;0.44;0.52;0.61;0.7;0.78;0.86;0.92;0.97;1"
+        values="110;127;140;128;145;132;149;136;153;140;127;114;121;110"/>
+    </circle>
+    <circle class="wk" r="1.9">
+      <animate attributeName="cx" dur="27s" begin="0s" repeatCount="indefinite"
+        keyTimes="0;0.1;0.18;0.27;0.35;0.44;0.52;0.61;0.7;0.78;0.86;0.92;0.97;1"
+        values="790;773;789;806;823;809;826;812;795;778;795;811;798;790"/>
+      <animate attributeName="cy" dur="27s" begin="0s" repeatCount="indefinite"
         keyTimes="0;0.1;0.18;0.27;0.35;0.44;0.52;0.61;0.7;0.78;0.86;0.92;0.97;1"
         values="110;127;140;128;145;132;149;136;153;140;127;114;121;110"/>
     </circle>
   </g>
 
+  <!-- ── mathematical annotations ────────────────────────────────── -->
+  <text class="eq" x="52" y="22" opacity="0">
+    <animate attributeName="opacity" dur="2s" begin="7s" fill="freeze" values="0;1"/>
+    &#x2016;X&#x2016;<tspan dy="4" font-size="9">p-var</tspan><tspan dy="-4"> &#x2264; &#x3c9;(s,t)</tspan><tspan dy="4" font-size="9">1/p</tspan>
+  </text>
+  <text class="eq" x="848" y="22" text-anchor="end" opacity="0">
+    <animate attributeName="opacity" dur="2s" begin="5s" fill="freeze" values="0;1"/>
+    S(X) = 1 + X + X<tspan dy="-5" font-size="9">&#x2297;2</tspan><tspan dy="5"> + X</tspan><tspan dy="-5" font-size="9">&#x2297;3</tspan><tspan dy="5"> + &#xb7;&#xb7;&#xb7;</tspan>
+  </text>
+  <text class="eq" x="372" y="210" text-anchor="middle" opacity="0">
+    <animate attributeName="opacity" begin="4.6s" dur="1.0s" fill="freeze" values="0;1"/>
+    A<tspan dy="4" font-size="9">s,t</tspan>
+  </text>
+  <!-- Avellaneda-Stoikov reservation price · right side above path -->
+  <text class="eq" x="848" y="207" text-anchor="end" opacity="0">
+    <animate attributeName="opacity" dur="2s" begin="10s" fill="freeze" values="0;1"/>
+    p* = s &#x2212; q&#x3b3;&#x3c3;&#xb2;(T&#x2212;t)
+  </text>
+
+  <text class="eq" x="52" y="278" opacity="0">
+    <animate attributeName="opacity" dur="1.8s" begin="2.5s" fill="freeze" values="0;1"/>
+    dY<tspan dy="4" font-size="9">t</tspan><tspan dy="-4"> = f(Y</tspan><tspan dy="4" font-size="9">t</tspan><tspan dy="-4">) dX</tspan><tspan dy="4" font-size="9">t</tspan>
+  </text>
+  <text class="eq" x="450" y="268" text-anchor="middle" opacity="0">
+    <animate attributeName="opacity" dur="2s" begin="9s" fill="freeze" values="0;1"/>
+    S(X)<tspan dy="4" font-size="9">s,u</tspan><tspan dy="-4"> &#x2297; S(X)</tspan><tspan dy="4" font-size="9">u,t</tspan><tspan dy="-4"> = S(X)</tspan><tspan dy="4" font-size="9">s,t</tspan>
+  </text>
+  <text class="eq" x="848" y="278" text-anchor="end" opacity="0">
+    <animate attributeName="opacity" dur="2s" begin="8s" fill="freeze" values="0;1"/>
+    &#x1d54f; = (X, A<tspan dy="4" font-size="9">s,t</tspan><tspan dy="-4">)</tspan>
+  </text>
+
   <!-- ── title ────────────────────────────────────────────────────── -->
   <g opacity="0">
     <animate attributeName="opacity" dur="1.6s" begin="0.4s" fill="freeze" values="0;1"/>
     <animateTransform attributeName="transform" type="translate" dur="1.6s"
-                      begin="0.4s" fill="freeze" values="0,10; 0,0"/>
-    <text class="name" x="457" y="152" text-anchor="middle" filter="url(#softGlow)">WERSTI</text>
+                      begin="0.4s" fill="freeze" values="0,10;0,0"/>
+    <text class="nm" x="457" y="152" text-anchor="middle" filter="url(#softGlow)">WERSTI</text>
   </g>
 
+  <!-- ── subtitle ─────────────────────────────────────────────────── -->
   <g opacity="0">
     <animate attributeName="opacity" dur="1.6s" begin="1.0s" fill="freeze" values="0;1"/>
     <animateTransform attributeName="transform" type="translate" dur="1.6s"
-                      begin="1.0s" fill="freeze" values="0,8; 0,0"/>
-    <text class="sub" x="453" y="184" text-anchor="middle">MATHEMATICIAN · ENGINEER · BUILDER</text>
+                      begin="1.0s" fill="freeze" values="0,8;0,0"/>
+    <text class="sb" x="453" y="184" text-anchor="middle">MATHEMATICIAN · BUILDER</text>
   </g>
+
 </svg>

@@ -9,10 +9,8 @@
 ```
 Mathematician · Telematics Engineer · MSc Advanced Mathematics
 
-Security Engineer @ Adevinta
-Research: Massive MIMO optimization · Neural dynamical systems
-
-Interests: AI/ML · Stochastic processes · Scalable systems · Cryptography
+Research: Stochastic processes · Probability theory · PDEs
+          Markets & trading systems · AI/ML · Systems & computing
 ```
 
 ---
