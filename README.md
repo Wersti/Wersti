@@ -6,12 +6,9 @@
 
 ---
 
-```
-Mathematician · Telematics Engineer · MSc Advanced Mathematics
+Mathematician and engineer. MSc Advanced Mathematics.
 
-Research: Stochastic processes · Probability theory · PDEs
-          Markets & trading systems · AI/ML · Systems & computing
-```
+Interested in mathematics, computation, and markets.
 
 ---
 
@@ -24,7 +21,7 @@ Research: Stochastic processes · Probability theory · PDEs
 ![C++](https://img.shields.io/badge/C++-0d1117?style=flat-square&logo=cplusplus&logoColor=00599C)
 ![R](https://img.shields.io/badge/R-0d1117?style=flat-square&logo=r&logoColor=276DC3)
 
-**AI / ML**
+**Research & Computation**
 
 ![JAX](https://img.shields.io/badge/JAX-0d1117?style=flat-square&logo=google&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-0d1117?style=flat-square&logo=pytorch&logoColor=EE4C2C)
@@ -33,7 +30,7 @@ Research: Stochastic processes · Probability theory · PDEs
 ![Polars](https://img.shields.io/badge/Polars-0d1117?style=flat-square&logo=polars&logoColor=CD792C)
 ![CUDA](https://img.shields.io/badge/CUDA-0d1117?style=flat-square&logo=nvidia&logoColor=76B900)
 
-**Cloud & Systems**
+**Infrastructure**
 
 ![AWS](https://img.shields.io/badge/AWS-0d1117?style=flat-square&logo=amazonaws&logoColor=FF9900)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-0d1117?style=flat-square&logo=kubernetes&logoColor=326CE5)
